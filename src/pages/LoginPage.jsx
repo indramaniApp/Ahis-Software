@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// Your existing image imports
+
 import image from '../assets/image.png';
 import image6 from '../assets/6.png';
 import image7 from '../assets/7.png';
@@ -13,11 +13,11 @@ import image12 from '../assets/12.png';
 import image13 from '../assets/13.png';
 import image14 from '../assets/14.png';
 import image15 from '../assets/15.png';
-// Imports for the new sections
-import image16 from '../assets/16.png'; // Operation Theater
-import image17 from '../assets/17.png'; // Workforce
-import image18 from '../assets/18.png'; // Communication
-import image19 from '../assets/19.png'; // Connected Care
+
+import image16 from '../assets/16.png'; 
+import image17 from '../assets/17.png';
+import image18 from '../assets/18.png'; 
+import image19 from '../assets/19.png'; 
 
 import Logo from '../assets/ahis.png';
 
