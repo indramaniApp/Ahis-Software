@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Link } from 'react-router-dom';
 
 
 import image from '../assets/image.png';
@@ -48,7 +48,7 @@ const handleFormSubmit = (e) => {
     
     if (!selectedRole) {
         alert("Please select a role to continue.");
-        return; // फंक्शन को यहीं रोक दें
+        return;
     }
 
     let path = ''; 
@@ -542,10 +542,10 @@ function HomePage() {
                 <div className="container mx-auto flex justify-between items-center p-4 px-6">
                     <h1 className="text-3xl font-extrabold text-[#8053C6]">AHIS</h1>
                     <nav className="hidden md:flex space-x-10 text-base font-medium text-gray-600">
-                        <a href="#features" className="hover:text-[#8053C6] transition-colors">Features</a>
-                        <a href="#products" className="hover:text-[#8053C6] transition-colors">Products</a>
-                        <a href="#testimonials" className="hover:text-[#8053C6] transition-colors">Testimonials</a>
-                        <a href="#contact" className="hover:text-[#8053C6] transition-colors">Contact Us</a>
+                        <Link href="#home" className="hover:text-[#8053C6] transition-colors">Home</Link>
+                        <Link href="#products" className="hover:text-[#8053C6] transition-colors">Products</Link>
+                        <Link href="#testimonials" className="hover:text-[#8053C6] transition-colors">Testimonials</Link>
+                        <Link href="#contact" className="hover:text-[#8053C6] transition-colors">Contact Us</Link>
                     </nav>
                     <div className="flex items-center space-x-3">
                         <button 
@@ -654,7 +654,7 @@ function HomePage() {
                         <div>
                             <h4 className="font-semibold text-lg mb-4">Quick Links</h4>
                             <ul className="space-y-2 text-gray-400">
-                                <li><a href="#features" className="hover:text-white">Features</a></li>
+                                <li><a href="#home" className="hover:text-white">Home</a></li>
                                 <li><a href="#products" className="hover:text-white">Products</a></li>
                                 <li><a href="#testimonials" className="hover:text-white">Testimonials</a></li>
                                 <li><a href="#contact" className="hover:text-white">Contact Us</a></li>
