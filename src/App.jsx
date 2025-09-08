@@ -11,6 +11,8 @@ import ProductsPage from "./pages/pharmacyRelated/ProductsPage";
 import SaltPage from "./pages/pharmacyRelated/SaltPage";
 import Supplier from "./pages/pharmacyRelated/Supplier";
 import PurchaseOrder from "./pages/pharmacyRelated/PurchageOrder";
+import Purchase from "./pages/pharmacyRelated/Purchase";
+import Retail from "./pages/pharmacyRelated/Retail";
 
 function App() {
   return (
@@ -28,6 +30,8 @@ function App() {
           <Route path="salt" element={<SaltPage />} />
           <Route path="supplier" element={<Supplier />} />
    <Route path="purchase-order" element={<PurchaseOrder />} />
+      <Route path="purchase" element={<Purchase/>} />
+      <Route path="retail" element={<Retail/>} />
  
 
         </Route>
