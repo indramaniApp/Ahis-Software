@@ -15,7 +15,7 @@ const PharmacyLayout = () => {
 
     return (
         <div className="flex h-screen bg-slate-50 font-sans text-sm">
-            <aside className="w-64 bg-white shadow-lg flex-shrink-0 overflow-y-auto">
+            <aside className="w-40 bg-white shadow-lg flex-shrink-0 overflow-y-auto">
                 <div className="p-5 border-b sticky top-0 bg-white z-10">
                     <h1 className="text-2xl font-extrabold text-[#D055D5]">AHIS</h1>
                 </div>

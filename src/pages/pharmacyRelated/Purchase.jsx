@@ -20,46 +20,247 @@ for (let i = 1; i <= 50; i++) {
     });
 }
 
-const initialItem = { id: 1, product: '', hsn: '', batch: '', qty: 0, rate: 0, amount: 0 };
+
+//=====================================================================
+//--- 1. ADD PURCHASE FORM COMPONENT (YE COMPONENT AAPKE IMAGE KE HISAB SE BANAYA GAYA HAI) ---
+//=====================================================================
+
+// New initial item state that matches the form's table columns
+const initialItem = {
+    id: 1, // Will be replaced by a unique key
+    product: '',
+    hsn: '',
+    batch: '',
+    qty: '',
+    schmPack: '',
+    mrp: '',
+    expiry: '',
+    rate: '',
+    sgst: '0', // Using string to allow dropdown selection
+    cgst: '0',
+    dis: '',
+    schemeAmt: '',
+    amount: 0,
+};
+
+// Helper component for the summary fields to avoid repetition
+const SummaryField = ({ label, value, isTotal = false }) => (
+    <div>
+        <label className={`block text-sm capitalize text-gray-700 ${isTotal ? 'font-bold' : 'font-medium'}`}>{label}</label>
+        <input
+            type="text"
+            value={`₹${(value || 0).toFixed(2)}`}
+            disabled
+            className={`mt-1 p-2 bg-gray-100 rounded-md w-full text-right text-sm ${isTotal ? 'font-bold' : ''}`}
+        />
+    </div>
+);
 
 
-//==============================================================
-//--- 1. ADD PURCHASE FORM COMPONENT (Ismein koi badlav nahi) ---
-//==============================================================
 const AddPurchaseForm = ({ onBackClick }) => {
-    // ... Ye component jaisa tha, waisa hi hai
-    const [formData, setFormData] = useState({ supplier: '', invoiceDate: '', invoiceNo: '', gstType: 'exclusive', enableTcs: false });
-    const [items, setItems] = useState([ {...initialItem, id: 1}, {...initialItem, id: 2}, {...initialItem, id: 3}, {...initialItem, id: 4} ]);
-    const [summary, setSummary] = useState({ grossAmount: 0, total: 0 });
-    useEffect(() => { const gross = items.reduce((total, item) => total + item.amount, 0); setSummary({ grossAmount: gross, total: gross }); }, [items]);
-    const handleItemChange = (index, e) => { const { name, value } = e.target; const newItems = [...items]; const numValue = parseFloat(value) || 0; newItems[index][name] = name === 'qty' || name === 'rate' ? numValue : value; const qty = newItems[index].qty; const rate = newItems[index].rate; newItems[index].amount = qty * rate; setItems(newItems); };
-    const addRow = () => { setItems([...items, { ...initialItem, id: Date.now() }]); };
-    const deleteRow = (index) => { if (items.length > 1) { setItems(items.filter((_, i) => i !== index)); } };
-    const handleSave = () => { console.log("Saving Data:", { formData, items, summary }); alert("Data saved! Check the console for details."); };
+    // State for top-level form data
+    const [formData, setFormData] = useState({
+        supplier: '',
+        invoiceDate: '',
+        invoiceNo: '',
+        gstType: 'exclusive',
+        enableTcs: false,
+        description: '',
+    });
+
+    // State for the table items, starting with 4 empty rows as in the image
+    const [items, setItems] = useState([
+        {...initialItem, id: Date.now() + 1 },
+        {...initialItem, id: Date.now() + 2 },
+        {...initialItem, id: Date.now() + 3 },
+        {...initialItem, id: Date.now() + 4 },
+    ]);
+
+    // State for the calculated summary at the bottom
+    const [summary, setSummary] = useState({
+        grossAmount: 0,
+        discount: 0,
+        sgst: 0,
+        cgst: 0,
+        schemeAmt: 0,
+        total: 0,
+    });
+
+    // This effect recalculates the summary whenever the items change
+    useEffect(() => {
+        let gross = 0;
+        let totalItemDiscount = 0;
+        let totalSgst = 0;
+        let totalCgst = 0;
+        let totalScheme = 0;
+
+        items.forEach(item => {
+            const qty = parseFloat(item.qty) || 0;
+            const rate = parseFloat(item.rate) || 0;
+            const disPercent = parseFloat(item.dis) || 0;
+
+            const baseAmount = qty * rate;
+            const discountValue = baseAmount * (disPercent / 100);
+            const amountAfterDiscount = baseAmount - discountValue;
+
+            gross += amountAfterDiscount;
+            totalItemDiscount += discountValue;
+            totalSgst += amountAfterDiscount * (parseFloat(item.sgst) / 100);
+            totalCgst += amountAfterDiscount * (parseFloat(item.cgst) / 100);
+            totalScheme += parseFloat(item.schemeAmt) || 0;
+        });
+
+        const finalTotal = gross + totalSgst + totalCgst;
+
+        setSummary({
+            grossAmount: gross,
+            discount: totalItemDiscount,
+            sgst: totalSgst,
+            cgst: totalCgst,
+            schemeAmt: totalScheme,
+            total: finalTotal,
+        });
+
+    }, [items]);
+
+    // Handles changes in the top-level form fields
+    const handleFormChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    // Handles changes within the items table
+    const handleItemChange = (index, e) => {
+        const { name, value } = e.target;
+        const newItems = [...items];
+
+        // Update the specific field for the item
+        newItems[index][name] = value;
+
+        // Recalculate the 'amount' for the current row immediately
+        const qty = parseFloat(newItems[index].qty) || 0;
+        const rate = parseFloat(newItems[index].rate) || 0;
+        const disPercent = parseFloat(newItems[index].dis) || 0;
+        newItems[index].amount = (qty * rate) * (1 - disPercent / 100);
+
+        setItems(newItems);
+    };
+
+    const handleSave = () => {
+        console.log("Saving Data:", { formData, items, summary });
+        alert("Data saved! Check the console for details.");
+    };
+
+    // Options for GST dropdowns. Can be expanded.
+    const gstOptions = [0, 5, 12, 18, 28];
+
     return (
-        <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <div className="flex justify-between items-center pb-4 mb-6 border-b">
-                <h2 className="text-xl font-semibold text-gray-800">Add Purchase</h2>
-                <button onClick={onBackClick} className="text-sm font-medium text-gray-600 hover:text-blue-600">Back</button>
+        <div className="bg-white border border-gray-200 rounded-md p-4 font-sans">
+            {/* Header */}
+            <div className="flex justify-between items-center pb-3 mb-4 border-b">
+                <h2 className="text-lg font-semibold text-gray-800">Add Purchase</h2>
+                <button onClick={onBackClick} className="text-sm font-medium text-gray-700 hover:text-blue-600">Back</button>
             </div>
-            <div className="overflow-x-auto mb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Add Items</h3>
-                <table className="w-full text-sm">
-                    <thead className="bg-gray-50"><tr>{['S No.', 'Product', 'HSN', 'Batch', 'Qty', 'Rate', 'Amount', 'Action'].map(header => (<th key={header} className="p-2 text-left text-xs font-semibold text-gray-600 border">{header}</th>))}</tr></thead>
-                    <tbody>{items.map((item, index) => (<tr key={item.id}><td className="p-1 border"><input type="text" value={index + 1} readOnly className="p-2 w-full text-center bg-gray-100 rounded-md"/></td><td className="p-1 border"><input name="product" value={item.product} onChange={(e) => handleItemChange(index, e)} placeholder="Search Product" className="p-2 w-full border rounded-md"/></td><td className="p-1 border"><input name="hsn" value={item.hsn} onChange={(e) => handleItemChange(index, e)} className="p-2 w-full border rounded-md"/></td><td className="p-1 border"><input name="batch" value={item.batch} onChange={(e) => handleItemChange(index, e)} className="p-2 w-full border rounded-md"/></td><td className="p-1 border"><input name="qty" value={item.qty} onChange={(e) => handleItemChange(index, e)} type="number" className="p-2 w-full border rounded-md"/></td><td className="p-1 border"><input name="rate" value={item.rate} onChange={(e) => handleItemChange(index, e)} type="number" className="p-2 w-full border rounded-md"/></td><td className="p-1 border"><input value={item.amount.toFixed(2)} readOnly className="p-2 w-full bg-gray-100 text-right rounded-md"/></td><td className="p-1 border text-center"><button onClick={() => deleteRow(index)} className="text-red-500 hover:text-red-700"><FiTrash2 size={18} /></button></td></tr>))}</tbody>
-                </table>
+
+            {/* Top Form Section */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4 mb-4 items-end">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Supplier <span className="text-red-500">*</span></label>
+                    <select name="supplier" value={formData.supplier} onChange={handleFormChange} className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                        <option value="">Select Supplier</option>
+                        <option value="supplier1">HealthKare Distributors</option>
+                        <option value="supplier2">PharmaPlus Inc.</option>
+                    </select>
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Invoice Date <span className="text-red-500">*</span></label>
+                    <input type="date" name="invoiceDate" value={formData.invoiceDate} onChange={handleFormChange} className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Invoice No <span className="text-red-500">*</span></label>
+                    <input type="text" name="invoiceNo" placeholder="invoice no." value={formData.invoiceNo} onChange={handleFormChange} className="mt-1 p-2 w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm" />
+                </div>
+                <div className="flex items-center justify-start space-x-4">
+                    <div className="flex items-center gap-4 text-sm">
+                        <label className="flex items-center"><input type="radio" name="gstType" value="inclusive" checked={formData.gstType === 'inclusive'} onChange={handleFormChange} className="mr-1"/> GST Inclusive</label>
+                        <label className="flex items-center"><input type="radio" name="gstType" value="exclusive" checked={formData.gstType === 'exclusive'} onChange={handleFormChange} className="mr-1"/> GST Exclusive</label>
+                    </div>
+                     <label className="flex items-center text-sm"><input type="checkbox" name="enableTcs" checked={formData.enableTcs} onChange={handleFormChange} className="mr-1"/> Enable TCS</label>
+                </div>
             </div>
-            <button onClick={addRow} className="mb-6 text-sm bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600">+ Add Row</button>
+
+            {/* Upload Button */}
+            <div className="mb-4">
+                <button className="bg-blue-500 text-white text-sm py-2 px-4 rounded-md hover:bg-blue-600">Upload Files</button>
+            </div>
+
+            {/* Items Table */}
+            <div className="mb-4">
+                <h3 className="text-md font-semibold text-gray-800 mb-2">Add Items</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-sm border-collapse">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                {['S No.', 'Product', 'HSN', 'Batch', 'Qty', 'Schm Pack', 'Mrp', 'Expiry', 'Rate', 'Sgst(%)', 'Cgst(%)', 'Dis(%)', 'Scheme Amt', 'Amount'].map(header => (
+                                    <th key={header} className="p-2 text-left text-xs font-semibold text-gray-600 border border-gray-200">{header}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {items.map((item, index) => (
+                                <tr key={item.id}>
+                                    <td className="p-1 border border-gray-200 w-12"><input type="text" value={index + 1} readOnly className="p-1 w-full text-center bg-gray-100 rounded-sm"/></td>
+                                    <td className="p-1 border border-gray-200 w-48"><select name="product" value={item.product} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm"><option value="">Search Product</option><option value="prod1">Paracetamol 500mg</option><option value="prod2">Aspirin 75mg</option></select></td>
+                                    <td className="p-1 border border-gray-200 w-24"><input name="hsn" value={item.hsn} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm"/></td>
+                                    <td className="p-1 border border-gray-200 w-24"><input name="batch" value={item.batch} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm"/></td>
+                                    <td className="p-1 border border-gray-200 w-20"><input name="qty" type="number" placeholder="0" value={item.qty} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-20"><input name="schmPack" type="number" placeholder="0" value={item.schmPack} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-20"><input name="mrp" type="number" placeholder="0" value={item.mrp} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-28"><input name="expiry" type="date" value={item.expiry} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm"/></td>
+                                    <td className="p-1 border border-gray-200 w-20"><input name="rate" type="number" placeholder="0" value={item.rate} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-20"><select name="sgst" value={item.sgst} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm">{gstOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select></td>
+                                    <td className="p-1 border border-gray-200 w-20"><select name="cgst" value={item.cgst} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm">{gstOptions.map(opt => <option key={opt} value={opt}>{opt}</option>)}</select></td>
+                                    <td className="p-1 border border-gray-200 w-20"><input name="dis" type="number" placeholder="0" value={item.dis} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-24"><input name="schemeAmt" type="number" placeholder="0" value={item.schemeAmt} onChange={e => handleItemChange(index, e)} className="p-1 w-full border-gray-300 rounded-sm text-right"/></td>
+                                    <td className="p-1 border border-gray-200 w-24"><input value={item.amount.toFixed(2)} readOnly className="p-1 w-full bg-gray-100 text-right rounded-sm"/></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {/* Summary Section */}
             <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-                <div className="w-full md:w-1/3"><label className="text-sm font-medium">Description</label><textarea placeholder="description" rows="4" className="p-2 mt-1 border rounded-md w-full"></textarea></div>
-                <div className="w-full md:w-2/3"><div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-4"><div><label className="text-sm">Gross Amount</label><input type="text" value={`₹${summary.grossAmount.toFixed(2)}`} disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right"/></div><div><label className="text-sm">Discount</label><input type="text" value="₹0.00" disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right"/></div><div><label className="text-sm">SGST</label><input type="text" value="₹0.00" disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right"/></div><div><label className="text-sm">CGST</label><input type="text" value="₹0.00" disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right"/></div><div><label className="text-sm">Scheme Amt</label><input type="text" value="₹0.00" disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right"/></div><div className="font-bold"><label className="text-sm">Total</label><input type="text" value={`₹${summary.total.toFixed(2)}`} disabled className="p-2 mt-1 bg-gray-100 rounded-md w-full text-right font-bold"/></div></div><div className="flex justify-end gap-4"><button onClick={() => console.log("Getting Rates...")} className="py-2 px-6 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700">Get Rates</button><button onClick={handleSave} className="py-2 px-6 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300">Save</button></div></div>
+                <div className="w-full md:w-1/3">
+                    <label className="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea name="description" placeholder="description" rows="4" value={formData.description} onChange={handleFormChange} className="mt-1 p-2 border border-gray-300 rounded-md w-full text-sm"></textarea>
+                </div>
+                <div className="w-full md:w-2/3 flex flex-col items-end">
+                     <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4 mb-4 w-full">
+                        <SummaryField label="gross amount" value={summary.grossAmount} />
+                        <SummaryField label="discount" value={summary.discount} />
+                        <SummaryField label="sgst" value={summary.sgst} />
+                        <SummaryField label="cgst" value={summary.cgst} />
+                        <SummaryField label="scheme amt" value={summary.schemeAmt} />
+                        <SummaryField label="total" value={summary.total} isTotal={true} />
+                    </div>
+                    <div className="flex justify-end gap-4">
+                        <button onClick={() => console.log("Getting Rates...")} className="py-2 px-6 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 text-sm">Get Rates</button>
+                        <button onClick={handleSave} className="py-2 px-6 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300 text-sm">Save</button>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
 
+
 //==============================================================
-//--- 2. NAYA MULTI-SELECT DROPDOWN COMPONENT ---
+//--- 2. NAYA MULTI-SELECT DROPDOWN COMPONENT (Ismein koi badlav nahi) ---
 //==============================================================
 const MultiSelectDropdown = ({ options, selectedOptions, onChange, placeholder = "Select Options" }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -87,13 +288,13 @@ const MultiSelectDropdown = ({ options, selectedOptions, onChange, placeholder =
 
 
 //==============================================================
-//--- 3. Main "Purchase" Component (YAHA SABSE ZYADA BADLAV HAI) ---
+//--- 3. Main "Purchase" Component (Ismein koi badlav nahi) ---
 //==============================================================
 function Purchase() {
-    const [showAddForm, setShowAddForm] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false); // Set to true to see the form by default
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
-    
+   
     // NAYE STATES FILTER KE LIYE
     const [grnSearch, setGrnSearch] = useState('');
     const [invoiceSearch, setInvoiceSearch] = useState('');
@@ -138,7 +339,7 @@ function Purchase() {
                             <FiPlus />
                         </button>
                     </div>
-                    
+                   
                     {/* --- Filters Card --- */}
                     <div className="bg-white border border-gray-200 rounded-lg p-5 mb-6">
                         <div className="flex flex-col sm:flex-row gap-4 mb-4">
@@ -208,7 +409,7 @@ function Purchase() {
                             </table>
                         </div>
                     </div>
-                    
+                   
                     {/* --- DYNAMIC PAGINATION --- */}
                     <div className="flex justify-end items-center py-5 gap-2">
                         <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1} className="border border-gray-300 bg-white py-1.5 px-3 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" >&lt;</button>
