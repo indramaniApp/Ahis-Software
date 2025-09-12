@@ -13,6 +13,7 @@ import Supplier from "./pages/pharmacyRelated/Supplier";
 import PurchaseOrder from "./pages/pharmacyRelated/PurchageOrder";
 import Purchase from "./pages/pharmacyRelated/Purchase";
 import Retail from "./pages/pharmacyRelated/Retail";
+import DepartmentAllocation from "./pages/DepartmentAllocation";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
    <Route path="purchase-order" element={<PurchaseOrder />} />
       <Route path="purchase" element={<Purchase/>} />
       <Route path="retail" element={<Retail/>} />
- 
+      <Route path="department-allocation" element={<DepartmentAllocation />} />
 
         </Route>
       </Routes>
