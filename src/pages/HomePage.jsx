@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 
 import image from '../assets/image.png';
@@ -14,10 +14,11 @@ import image13 from '../assets/13.png';
 import image14 from '../assets/14.png';
 import image15 from '../assets/15.png';
 
-import image16 from '../assets/16.png'; 
+import image16 from '../assets/16.png';
 import image17 from '../assets/17.png';
-import image18 from '../assets/18.png'; 
-import image19 from '../assets/19.png'; 
+import image18 from '../assets/18.png';
+import image19 from '../assets/19.png';
+import image20 from '../assets/20.png';
 
 import Logo from '../assets/ahis.png';
 
@@ -37,56 +38,54 @@ const LoginModal = ({ isOpen, onClose }) => {
                 onClose();
             }
         };
-    
+
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [onClose]);
-const handleFormSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!selectedRole) {
-        alert("Please select a role to continue.");
-        return;
-    }
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
 
-    let path = ''; 
+        if (!selectedRole) {
+            alert("Please select a role to continue.");
+            return;
+        }
+
+        let path = '';
 
 
-    switch (selectedRole) {
-        case 'admin':
-            path = '/dashboard';
-            break;
-        case 'doctor':
-            path = '/doctor-portal';
-            break;
-        case 'patient':
-            path = '/patient-records';
-            break;
-        case 'pharmacy':
-         
-            path = '/pharmacy';
-            break;
-        case 'staff':
-            path = '/staff-area';
-            break;
-        default:
-        
-            path = '/'; 
-            break;
-    }
+        switch (selectedRole) {
+            case 'admin':
+                path = '/dashboard';
+                break;
+            case 'doctor':
+                path = '/doctor-portal';
+                break;
+            case 'patient':
+                path = '/patient-records';
+                break;
+            case 'pharmacy':
+                path = '/pharmacy';
+                break;
+            case 'staff':
+                path = '/staff-area';
+                break;
+            default:
+                path = '/';
+                break;
+        }
 
-    console.log(`Navigating to: ${path}`);
-    navigate(path); // चुने हुए पाथ पर नेविगेट करें
-};
-    
+        console.log(`Navigating to: ${path}`);
+        navigate(path);
+    };
+
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4 transition-opacity duration-300">
             <div
-                ref={modalRef} 
+                ref={modalRef}
                 className="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm relative transform transition-all duration-300 ease-out"
             >
                 <button
@@ -98,13 +97,13 @@ const handleFormSubmit = (e) => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                
+
                 <div className="flex justify-center mb-5">
                     <img src={Logo} alt="AHIS Logo" className="h-16 w-auto" />
                 </div>
-                
+
                 <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">Welcome Back</h2>
-                
+
                 <form onSubmit={handleFormSubmit} className="space-y-5">
                     <div>
                         <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-1">
@@ -115,8 +114,8 @@ const handleFormSubmit = (e) => {
                             name="role"
                             className="w-full px-4 py-2.5 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8053C6] focus:border-[#8053C6] transition"
                             required
-                            value={selectedRole} // स्टेट से वैल्यू कंट्रोल करें
-                            onChange={(e) => setSelectedRole(e.target.value)} // बदलने पर स्टेट अपडेट करें
+                            value={selectedRole}
+                            onChange={(e) => setSelectedRole(e.target.value)}
                         >
                             <option value="" disabled>Choose your role</option>
                             <option value="admin">Admin</option>
@@ -302,7 +301,7 @@ const ProductsSection = () => {
         const handleScroll = () => {
             const topOffset = window.innerHeight * 0.4;
             let currentId = '';
-            
+
             for (const product of productsData) {
                 const element = sectionRefs.current[product.id];
                 if (element) {
@@ -322,7 +321,7 @@ const ProductsSection = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, [activeId]);
-    
+
     const handleNavClick = (id) => {
         setActiveId(id);
         sectionRefs.current[id]?.scrollIntoView({
@@ -355,9 +354,9 @@ const ProductsSection = () => {
                                 <img src={product.image} alt={product.name} className="object-cover w-full h-full" />
                             </div>
                             <h3 className="text-xl font-bold text-gray-800 text-center mb-2">{product.title}</h3>
-                             <p className="text-gray-600 text-sm leading-relaxed mb-4">{product.description}</p>
-                             <div className="grid grid-cols-1 gap-x-4 gap-y-2 text-gray-700 text-sm">
-                                 {product.features.map((feature, index) => <BulletPoint key={index} text={feature} />)}
+                            <p className="text-gray-600 text-sm leading-relaxed mb-4">{product.description}</p>
+                            <div className="grid grid-cols-1 gap-x-4 gap-y-2 text-gray-700 text-sm">
+                                {product.features.map((feature, index) => <BulletPoint key={index} text={feature} />)}
                             </div>
                         </div>
                     )}
@@ -368,7 +367,7 @@ const ProductsSection = () => {
 
     const DesktopView = () => (
         <div className="hidden md:flex gap-16">
-             <aside className="w-1/4">
+            <aside className="w-1/4">
                 <div className="sticky top-24">
                     <h3 className="text-3xl font-bold mb-6 text-[#8053C6]">Products</h3>
                     <ul className="space-y-1">
@@ -379,7 +378,7 @@ const ProductsSection = () => {
                                     className={`w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${activeId === product.id
                                         ? 'bg-[#8053C6] text-white shadow-lg'
                                         : 'text-gray-600 hover:bg-purple-50 hover:text-[#8053C6]'
-                                    }`}
+                                        }`}
                                 >
                                     {product.name}
                                 </button>
@@ -399,7 +398,7 @@ const ProductsSection = () => {
                             <p className="text-gray-600 text-base leading-relaxed mt-2">{product.description}</p>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-gray-700">
-                           {product.features.map((feature, index) => <BulletPoint key={index} text={feature} />)}
+                            {product.features.map((feature, index) => <BulletPoint key={index} text={feature} />)}
                         </div>
                         <div className="mt-10">
                             <a href="#" className="bg-[#D055D5] text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 inline-block">
@@ -414,7 +413,7 @@ const ProductsSection = () => {
 
     return (
         <section id="products" className="py-24">
-             <div className="container mx-auto px-6">
+            <div className="container mx-auto px-6">
                 <AccordionView />
                 <DesktopView />
             </div>
@@ -424,25 +423,25 @@ const ProductsSection = () => {
 
 
 const testimonials = [
-    { 
-        name: 'Dr. G Senthil Kumar', 
-        title: 'Dental Surgeon', 
-        quote: 'I was using a high cost HMS for 4 years before I switched to Ezovion Orthopedic Practice Management Software. Ezovion is easy to use, has complete EMR, PACS integration which helps my Ortho practice more efficiently. My existing patient data migration was seamlessly taken care of during Ezovion implementation.' 
+    {
+        name: 'Dr. G Senthil Kumar',
+        title: 'Dental Surgeon',
+        quote: 'I was using a high cost HMS for 4 years before I switched to Ezovion Orthopedic Practice Management Software. Ezovion is easy to use, has complete EMR, PACS integration which helps my Ortho practice more efficiently. My existing patient data migration was seamlessly taken care of during Ezovion implementation.'
     },
-    { 
-        name: 'Ravi Kumar', 
-        title: 'IT Head, Sunshine Healthcare', 
-        quote: 'The FHIR compliance and robust security features were key for us. The system is intuitive for staff and provides management with invaluable real-time analytics.' 
+    {
+        name: 'Ravi Kumar',
+        title: 'IT Head, Sunshine Healthcare',
+        quote: 'The FHIR compliance and robust security features were key for us. The system is intuitive for staff and provides management with invaluable real-time analytics.'
     },
-    { 
-        name: 'Priya Mehta', 
-        title: 'Pharmacy Manager, Wellness Clinics', 
-        quote: 'Inventory and pharmacy management has never been easier. Expiry alerts and automated reordering have optimized our stock levels and prevented wastage.' 
+    {
+        name: 'Priya Mehta',
+        title: 'Pharmacy Manager, Wellness Clinics',
+        quote: 'Inventory and pharmacy management has never been easier. Expiry alerts and automated reordering have optimized our stock levels and prevented wastage.'
     },
-    { 
-        name: 'Sameer Gupta', 
-        title: 'CEO, Horizon Medical Group', 
-        quote: 'Implementing this software was the best decision for our multi-location clinics. The centralized data management gives us a complete overview of our entire operation.' 
+    {
+        name: 'Sameer Gupta',
+        title: 'CEO, Horizon Medical Group',
+        quote: 'Implementing this software was the best decision for our multi-location clinics. The centralized data management gives us a complete overview of our entire operation.'
     },
 ];
 
@@ -454,9 +453,9 @@ const TestimonialsSection = () => {
         const timer = setTimeout(() => {
             const nextIndex = (currentIndex + 1) % testimonials.length;
             setCurrentIndex(nextIndex);
-        }, 5000); 
+        }, 5000);
 
-        return () => clearTimeout(timer); 
+        return () => clearTimeout(timer);
     }, [currentIndex]);
 
     const goToPrevious = () => {
@@ -481,7 +480,7 @@ const TestimonialsSection = () => {
 
                 <div className="relative max-w-4xl mx-auto flex items-center justify-center min-h-[250px]">
                     {/* Left Arrow */}
-                    <button 
+                    <button
                         onClick={goToPrevious}
                         className="absolute left-0 sm:-left-8 z-10 p-2 rounded-full bg-white/50 hover:bg-white transition-colors shadow-md"
                         aria-label="Previous testimonial"
@@ -513,8 +512,8 @@ const TestimonialsSection = () => {
                         </div>
                     </div>
 
-                
-                    <button 
+
+                    <button
                         onClick={goToNext}
                         className="absolute right-0 sm:-right-8 z-10 p-2 rounded-full bg-white/50 hover:bg-white transition-colors shadow-md"
                         aria-label="Next testimonial"
@@ -530,25 +529,98 @@ const TestimonialsSection = () => {
 };
 
 
+// ++ SERVICES DROPDOWN COMPONENT ++
+const ServicesDropdown = () => {
+    const devServices = [
+        { title: 'iOS', description: 'Build your native iOS Apps with Swift and Obj. C' },
+        { title: 'Android', description: 'Native Android app development with Java and Kotlin' },
+        { title: 'Cross Platform', description: 'Cross platform mobile apps using Javascript, HTML5 and Dart' },
+        { title: 'Web Development', description: 'Offering smooth and secure Web Applications Development Services' },
+        { title: 'UI/UX Design', description: 'Great way to kickstart your digital journey with seamless user experience' },
+        { title: 'Full Stack', description: 'Seamless end to end product development, from Frontend to Backend.' },
+    ];
+    const enterpriseServices = [
+        { title: 'Enterprise App', description: 'Transforming your business process digitally.' },
+        { title: 'ServiceNow', description: 'Expert ServiceNow Implementation for Your Business.' },
+    ];
+
+    const ServiceItem = ({ title, description }) => (
+        <div className="hover:bg-gray-50 p-3 rounded-lg transition-colors duration-200 cursor-pointer">
+            <h4 className="font-bold text-gray-800">{title}</h4>
+            <p className="text-sm text-gray-500">{description}</p>
+        </div>
+    );
+
+    const SectionTitle = ({ title }) => (
+        <div className="flex items-center mb-4">
+            <div className="p-1.5 bg-purple-100 rounded-md mr-3">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        </div>
+    );
+
+    return (
+        <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-screen max-w-4xl">
+            <div className="bg-white rounded-lg shadow-2xl p-8 border border-gray-100">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-8">
+                    {/* Custom Software Development Section */}
+                    <div>
+                        <SectionTitle title="Custom Software Development" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {devServices.map(service => <ServiceItem key={service.title} {...service} />)}
+                        </div>
+                    </div>
+
+                    {/* Enterprise Solution Section */}
+                    <div>
+                        <SectionTitle title="Enterprise Solution" />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {enterpriseServices.map(service => <ServiceItem key={service.title} {...service} />)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 function HomePage() {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+    // State for services menu visibility
+    const [isServicesMenuOpen, setServicesMenuOpen] = useState(false);
 
-    const keyFeatures1 = [ "Appointment Management", "OPD Management", "IPD Management", "Billing & Invoicing", "Discharge Summary", "OT Management", "Pharmacy Management", "Referral Management" ];
-    const keyFeatures2 = [ "Laboratory Management", "Radiology Management", "Inventory Management", "Financial Accounting", "HR & Payroll", "MIS Reports", "Mobile App", "Patient Portal" ];
+    const keyFeatures1 = ["Appointment Management", "OPD Management", "IPD Management", "Billing & Invoicing", "Discharge Summary", "OT Management", "Pharmacy Management", "Referral Management"];
+    const keyFeatures2 = ["Laboratory Management", "Radiology Management", "Inventory Management", "Financial Accounting", "HR & Payroll", "MIS Reports", "Mobile App", "Patient Portal"];
 
     return (
         <div style={{ fontFamily: "'Poppins', sans-serif" }} className="bg-white text-[#333]">
             <header className="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-40">
                 <div className="container mx-auto flex justify-between items-center p-4 px-6">
                     <h1 className="text-3xl font-extrabold text-[#8053C6]">AHIS</h1>
-                    <nav className="hidden md:flex space-x-10 text-base font-medium text-gray-600">
-                        <Link href="#home" className="hover:text-[#8053C6] transition-colors">Home</Link>
-                        <Link href="#products" className="hover:text-[#8053C6] transition-colors">Products</Link>
-                        <Link href="#testimonials" className="hover:text-[#8053C6] transition-colors">Testimonials</Link>
-                        <Link href="#contact" className="hover:text-[#8053C6] transition-colors">Contact Us</Link>
+                    <nav className="hidden md:flex space-x-10 text-base font-medium text-gray-600 items-center">
+                        <Link to="#home" className="hover:text-[#8053C6] transition-colors">Home</Link>
+
+                        {/* Services Menu Item with Hover Logic */}
+                        <div
+                            className="relative"
+                            onMouseEnter={() => setServicesMenuOpen(true)}
+                            onMouseLeave={() => setServicesMenuOpen(false)}
+                        >
+                            <button className="flex items-center hover:text-[#8053C6] transition-colors cursor-pointer">
+                                Services
+                                <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+                            {isServicesMenuOpen && <ServicesDropdown />}
+                        </div>
+
+                        <Link to="#products" className="hover:text-[#8053C6] transition-colors">Products</Link>
+                        <Link to="#testimonials" className="hover:text-[#8053C6] transition-colors">Testimonials</Link>
+                        <Link to="#contact" className="hover:text-[#8053C6] transition-colors">Contact Us</Link>
                     </nav>
                     <div className="flex items-center space-x-3">
-                        <button 
+                        <button
                             onClick={() => setLoginModalOpen(true)}
                             className="font-semibold text-[#8053C6] px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors"
                         >
@@ -560,7 +632,7 @@ function HomePage() {
             </header>
 
             <main>
-                 <section className="bg-[#FAF7FF] pt-12 pb-20">
+                <section className="bg-[#FAF7FF] pt-12 pb-20">
                     <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center px-6">
                         <div>
                             <h2 className="text-5xl font-extrabold leading-tight"> Leading Hospital <br /> Management Software <br /> in India </h2>
@@ -639,11 +711,11 @@ function HomePage() {
                         <img src={imageMap} alt="Map of India with customer locations" className="max-w-4xl mx-auto" />
                     </div>
                 </section>
-                
+
                 <ProductsSection />
                 <TestimonialsSection />
             </main>
-            
+
             <footer id="contact" className="bg-gray-800 text-white">
                 <div className="container mx-auto py-16 px-6">
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -661,7 +733,7 @@ function HomePage() {
                             </ul>
                         </div>
                         <div>
-                             <h4 className="font-semibold text-lg mb-4">Contact</h4>
+                            <h4 className="font-semibold text-lg mb-4">Contact</h4>
                             <ul className="space-y-2 text-gray-400">
                                 <li><p>123 Health St, MedCity</p></li>
                                 <li><p>contact@ahis.com</p></li>
@@ -683,9 +755,9 @@ function HomePage() {
                 </div>
             </footer>
 
-            <LoginModal 
-                isOpen={isLoginModalOpen} 
-                onClose={() => setLoginModalOpen(false)} 
+            <LoginModal
+                isOpen={isLoginModalOpen}
+                onClose={() => setLoginModalOpen(false)}
             />
         </div>
     );

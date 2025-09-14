@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Icons as separate components for better readability
+
 const ViewIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -23,23 +23,23 @@ const PrintIcon = () => (
 );
 
 
-// Sample data updated to match all columns from the image
+
 const retailData = [
   { sNo: 1, billDate: '08/09/2025 15:14:47', billId: 1761, seqId: 761, visitSeq: 622, patientName: 'SHALU SHUKLA', phone: '9935581691', doctor: 'N/A', billType: 'Direct', billTotal: '₹53.00', category: 'Cash', paymentMode: 'Credit', createdOn: '08/09/2025 15:14', createdBy: 'Mr. Pawan Singh' },
   { sNo: 2, billDate: '08/09/2025 15:07:21', billId: 1760, seqId: 248, visitSeq: 621, patientName: 'Kiran Singh', phone: '8586071381', doctor: 'N/A', billType: 'Direct', billTotal: '₹861.00', category: 'Credit', paymentMode: 'N/A', createdOn: '08/09/2025 15:08', createdBy: 'Mr. Pawan Singh' },
   { sNo: 3, billDate: '08/09/2025 14:03:55', billId: 1758, seqId: 1447, visitSeq: 620, patientName: 'Pravesh', phone: '6392587681', doctor: 'N/A', billType: 'Direct', billTotal: '₹216.00', category: 'Cash', paymentMode: 'Paytm', createdOn: '08/09/2025 14:05', createdBy: 'Mr. Pawan Singh' },
   { sNo: 4, billDate: '08/09/2025 13:57:12', billId: 1757, seqId: 1446, visitSeq: 619, patientName: 'Pravesh', phone: '6392587681', doctor: 'N/A', billType: 'Direct', billTotal: '₹138.00', category: 'Cash', paymentMode: 'Paytm', createdOn: '08/09/2025 14:01', createdBy: 'Mr. Pawan Singh' },
   { sNo: 5, billDate: '08/09/2025 14:00:14', billId: 1757, seqId: 1445, visitSeq: 618, patientName: 'ABHINAY', phone: '6386071355', doctor: 'N/A', billType: 'Direct', billTotal: '₹56.00', category: 'Cash', paymentMode: 'Paytm', createdOn: '08/09/2025 14:00', createdBy: 'Mr. Pawan Singh' },
-  // Add more data as needed...
+
 ];
 
 function Retail() {
   return (
     <div className="p-4 sm:p-6 bg-gray-100 min-h-screen">
-        {/* Warning Banner */}
+  
         
         
-        {/* Main Content Card */}
+     
         <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-gray-800 mb-4">Retail</h2>
             

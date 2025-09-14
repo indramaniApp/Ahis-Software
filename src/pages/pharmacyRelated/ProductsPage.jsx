@@ -2,14 +2,14 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast, { Toaster } from 'react-hot-toast';
 
-// --- Icon Components ---
+
 const PlusIcon = ({ className = "h-5 w-5" }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>);
 const PencilIcon = ({ className = "h-4 w-4" }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>);
 const TrashIcon = ({ className = "h-4 w-4" }) => ( <svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>);
 const SearchIcon = ({ className = "h-5 w-5" }) => (<svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>);
 const BoxIcon = ({ className = "h-8 w-8" }) => (<svg xmlns="http://www.w3.org/2000/svg" className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10.5 8.25h3M12 3v5.25" /></svg>);
 
-// --- Mock Data ---
+
 const mockProducts = [
     { id: 1, name: 'KRPL Metrogyl 100ml', type: 'Infusion', pu: 1, company: 'Kunal Remedies Pvt Ltd', salt: 'Metronidazole (500mg)' },
     { id: 2, name: 'Betadine Solution', type: 'Solution', pu: 1, company: 'Win-Medicare Pvt Ltd', salt: 'Povidone Iodine (4% W/V)' },
@@ -22,7 +22,7 @@ const mockProducts = [
 function ProductsPage() {
     const [products, setProducts] = useState(mockProducts);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalData, setModalData] = useState(null); // For Add/Edit
+    const [modalData, setModalData] = useState(null); 
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const ITEMS_PER_PAGE = 8;
@@ -34,12 +34,12 @@ function ProductsPage() {
     };
     const closeModal = () => setIsModalOpen(false);
 
-    // --- CRUD Logic ---
+  
     const handleSaveProduct = (productData) => {
-        if (modalData) { // Edit Mode
+        if (modalData) {
             setProducts(products.map(p => p.id === modalData.id ? { ...p, ...productData } : p));
             toast.success('Product updated successfully!');
-        } else { // Add Mode
+        } else { 
             setProducts([{ id: Date.now(), ...productData }, ...products]);
             toast.success('Product added successfully!');
         }
@@ -72,7 +72,7 @@ function ProductsPage() {
         ), { icon: '🤔', duration: 6000 });
     };
 
-    // --- Filtering & Pagination ---
+   
     const filteredProducts = useMemo(() => products.filter(p =>
         p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.company.toLowerCase().includes(searchTerm.toLowerCase()) ||

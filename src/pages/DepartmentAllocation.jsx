@@ -1,8 +1,7 @@
 import React from 'react';
-// Icons import karna na bhoolein
+
 import { FaPrint, FaEye, FaSync, FaTrash } from 'react-icons/fa';
 
-// Sample data to populate the table, aap isko API se fetch karenge real application mein
 const allocationData = [
   { sNo: 1, billId: 1723, indentId: 'N/A', seqId: 65, deptName: 'Emergency Ward', name: 'GENERAL CONSUMPTION', issueDate: '2025/09/04 15:36:47', total: 885.45, returnAmount: 0.00, finalAmount: 885.45, issuedBy: 'Mr. Pawan Singh' },
   { sNo: 2, billId: 1680, indentId: 'N/A', seqId: 64, deptName: 'OT', name: 'GENERAL CONSUMPTION', issueDate: '2025/09/01 12:27:12', total: 140.14, returnAmount: 0.00, finalAmount: 140.14, issuedBy: 'Mr. Pawan Singh' },
@@ -87,7 +86,7 @@ function DepartmentAllocation() {
           </table>
         </div>
 
-        {/* ## Pagination Section */}
+      
         <div className="flex justify-end items-center mt-6">
           <nav className="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             <a href="#" className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
